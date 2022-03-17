@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints version="2.0" xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime">
+  <endpoint implementation="ru.d13.projs.webstore.endpoints.CustomerWS" name="CustomerWS" url-pattern="/customer-ws"/>
+  <endpoint implementation="ru.d13.projs.webstore.endpoints.OrderWS" name="OrderWS" url-pattern="/order-ws"/>
+  <endpoint implementation="ru.d13.projs.webstore.endpoints.ProductWS" name="ProductWS" url-pattern="/product-ws"/>
+</endpoints>
