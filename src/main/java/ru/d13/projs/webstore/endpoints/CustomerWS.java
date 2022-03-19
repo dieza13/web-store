@@ -1,27 +1,19 @@
 package ru.d13.projs.webstore.endpoints;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.d13.projs.webstore.models.Customer;
 import ru.d13.projs.webstore.services.CustomerDao;
-import ru.d13.projs.webstore.services.CustomerDaoImpl;
 
-import javax.annotation.Resource;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-
 import java.util.List;
 
-@Service
+@Component
 @WebService
-public class CustomerWS extends SpringBeanAutowiringSupport {
-
-    public CustomerWS() {
-        customerDao = new CustomerDaoImpl();
-    }
+@AllArgsConstructor
+public class CustomerWS {
 
     private CustomerDao customerDao;
 

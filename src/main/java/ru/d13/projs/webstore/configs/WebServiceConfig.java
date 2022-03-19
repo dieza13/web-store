@@ -1,57 +1,92 @@
 package ru.d13.projs.webstore.configs;
 
-import com.sun.xml.ws.transport.http.servlet.WSServlet;
-import com.sun.xml.ws.transport.http.servlet.WSServletContextListener;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sun.xml.ws.transport.http.servlet.SpringBinding;
+import com.sun.xml.ws.transport.http.servlet.WSSpringServlet;
+import lombok.SneakyThrows;
+import org.jvnet.jax_ws_commons.spring.SpringService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter;
-import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.config.annotation.WsConfigurerAdapter;
+import ru.d13.projs.webstore.endpoints.CustomerWS;
+import ru.d13.projs.webstore.endpoints.OrderWS;
+import ru.d13.projs.webstore.endpoints.ProductWS;
 
-import javax.servlet.ServletContext;
+import javax.jws.WebService;
 
-@EnableWs
 @Configuration
 @PropertySource("service-endpoints.properties")
 public class WebServiceConfig extends WsConfigurerAdapter {
 
-    private boolean IS_PARAMETERS_SET = false;
-    @Autowired
-    private EndpointConfig endpointConfig;
+    private static String ERR_BAD_SERVICE = "Нельзя создать веб-сервис, класс %s не содержит аннотацию WebService";
 
     @Bean
-    public ServletRegistrationBean<WSServlet> customerServlet(ServletContext servletContext) {
-        return createServlet(endpointConfig.getCUSTOMER_SERVLET_NAME(), endpointConfig.getCUSTOMER_PATTERN(), servletContext);
+    public SpringBinding customerWSBinding(
+            @Value("${service.customer.endpoint}") String pattern
+            ,CustomerWS customerWS
+    ) {
+
+        return binding(pattern,customerWS);
     }
 
     @Bean
-    public ServletRegistrationBean<WSServlet> orderServlet(ServletContext servletContext) {
-        return createServlet(endpointConfig.getORDER_SERVLET_NAME(), endpointConfig.getORDER_PATTERN(), servletContext);
+    public SpringBinding orderWSBinding(
+            @Value("${service.order.endpoint}") String pattern
+            , OrderWS orderWS
+            ) {
+        return binding(pattern, orderWS);
     }
 
     @Bean
-    public ServletRegistrationBean<WSServlet> productServlet(ServletContext servletContext) {
-        return createServlet(endpointConfig.getPRODUCT_SERVLET_NAME(), endpointConfig.getPRODUCT_PATTERN(), servletContext);
+    public SpringBinding productWSBinding(
+            @Value("${service.product.endpoint}") String pattern
+            , ProductWS productWS) {
+        return binding(pattern, productWS);
     }
 
-    private ServletRegistrationBean<WSServlet> createServlet(String servletName, String urlPattern, ServletContext servletContext) {
-        if (!IS_PARAMETERS_SET) {
-            IS_PARAMETERS_SET = !IS_PARAMETERS_SET;
-            servletContext.addListener(new WSServletContextListener());
+
+    @SneakyThrows
+    private SpringBinding binding(String urlPattern, Object service) {
+        if (!service.getClass().isAnnotationPresent(WebService.class)) {
+            throw new RuntimeException(String.format(ERR_BAD_SERVICE,WebService.class.getName()));
         }
-        WSServlet wss = new WSServlet();
-        ServletRegistrationBean<WSServlet> serv =  new ServletRegistrationBean<>(wss, urlPattern);
+        SpringService springService = new SpringService();
+        springService.setBean(service);
+        SpringBinding binding = new SpringBinding();
+        binding.setService(springService.getObject());
+        binding.setUrl(urlPattern);
+
+        return binding;
+    }
+//
+    @Bean
+    public ServletRegistrationBean<WSSpringServlet> customerServlet(
+            @Value("${service.customer.endpoint}") String pattern
+            ,@Value("${service.customer.name}") String servletName) {
+        return createServlet(servletName,pattern);
+    }
+
+    @Bean
+    public ServletRegistrationBean<WSSpringServlet> orderServlet(
+            @Value("${service.order.endpoint}") String pattern
+            ,@Value("${service.order.name}") String servletName) {
+        return createServlet(servletName,pattern);
+    }
+
+    @Bean
+    public ServletRegistrationBean<WSSpringServlet> productServlet(
+            @Value("${service.product.endpoint}") String pattern
+            ,@Value("${service.product.name}") String servletName) {
+        return createServlet(servletName,pattern);
+    }
+
+    private ServletRegistrationBean<WSSpringServlet> createServlet(String servletName, String urlPattern) {
+        WSSpringServlet wss = new WSSpringServlet();
+        ServletRegistrationBean<WSSpringServlet> serv =  new ServletRegistrationBean<>(wss, urlPattern);
         serv.setLoadOnStartup(1);
         serv.setName(servletName);
         return serv;
-    }
-
-    @Bean
-    public SimpleJaxWsServiceExporter simpleJaxWsServiceExporter() {
-        return new SimpleJaxWsServiceExporter();
     }
 }

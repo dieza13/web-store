@@ -1,8 +1,9 @@
 package ru.d13.projs.webstore.endpoints;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.d13.projs.webstore.models.Product;
 import ru.d13.projs.webstore.services.ProductDao;
-import ru.d13.projs.webstore.services.ProductDaoImpl;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -10,14 +11,12 @@ import javax.jws.WebService;
 
 import java.util.List;
 
+@Component
 @WebService(serviceName = "ProductWS")
+@AllArgsConstructor
 public class ProductWS {
 
     private ProductDao productDao;
-
-    public  ProductWS() {
-        productDao = new ProductDaoImpl();
-    }
 
     @WebMethod
     public List<Product> getProducts() {

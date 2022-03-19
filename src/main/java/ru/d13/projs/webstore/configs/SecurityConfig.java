@@ -17,7 +17,6 @@ import java.util.Collection;
 
 @Configuration
 @EnableWebSecurity
-@PropertySource("classpath:service-endpoints.properties")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
