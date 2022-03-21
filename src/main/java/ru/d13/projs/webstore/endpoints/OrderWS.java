@@ -18,7 +18,6 @@ public class OrderWS {
     private OrderDao orderDao;
 
     @WebMethod
-//    @PreAuthorize("hasRole('ORDER_MASTER')")
     public List<Order> getOrders() {
         return orderDao.getOrders();
     }

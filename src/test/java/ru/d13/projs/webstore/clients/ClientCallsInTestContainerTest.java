@@ -71,7 +71,6 @@ public class ClientCallsInTestContainerTest {
 
     private String authServerUrl;
 
-
     @BeforeAll
     public static void init() {
         webClient = WebClient.builder().build();
