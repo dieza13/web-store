@@ -105,7 +105,7 @@ public class ClientCallsInTestContainerTest {
     @DisplayName("Ошибка при вызове сервиса по клиентам сервисом manager-service без параметров аутентификации")
     @Test
     void managerServiceCallCustomerWSDirectlyAuthError_Test() throws Exception {
-        log.info("<<<Ошибка при вызове сервиса по клиентам сервисом manager-service параметров аутентификации>>>");
+        log.info("<<<Ошибка при вызове сервиса по клиентам сервисом manager-service без параметров аутентификации>>>");
         String requestGetCustomers = fileToString("xml/getCustomers.xml");
         Assert.assertThrows(RuntimeException.class,()->callResource(requestGetCustomers, customerWS_Url, webClient));
         log.info("<<<________________________________________________________________________>>>");
