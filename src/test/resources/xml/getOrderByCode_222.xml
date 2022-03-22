@@ -1,0 +1,9 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:end="http://endpoints.webstore.projs.d13.ru/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <end:getOrderByCode>
+            <!--Optional:-->
+            <order_code>222</order_code>
+        </end:getOrderByCode>
+    </soapenv:Body>
+</soapenv:Envelope>

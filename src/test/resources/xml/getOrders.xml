@@ -1,0 +1,6 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:end="http://endpoints.webstore.projs.d13.ru/">
+    <soapenv:Header/>
+    <soapenv:Body>
+        <end:getOrders/>
+    </soapenv:Body>
+</soapenv:Envelope>
